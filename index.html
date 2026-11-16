@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#123b2d">
+  <meta name="description" content="Navidad en Familia Ugalde. Un espacio para compartir actividades, cartas y recuerdos navideños.">
+  <title>Navidad en Familia | Ugalde</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Música navideña de fondo -->
+  <audio id="backgroundMusic" loop preload="auto">
+    <source src="../Carol of bell.MP3.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="snow" aria-hidden="true"></div>
+
+  <!-- Escenario del viaje de las cartas -->
+  <div id="letterJourney" class="letter-journey" aria-hidden="true">
+    <div class="journey-stars">✦　·　✧　·　✦　·　✧　·　✦</div>
+
+    <div class="journey-destination">
+      <span class="destination-snow">❄️</span>
+      <span class="destination-house">🏠</span>
+      <strong>Polo Norte</strong>
+      <span class="destination-snow">❄️</span>
+    </div>
+
+    <div class="journey-trail"></div>
+
+    <div id="journeyEnvelope" class="journey-envelope" aria-hidden="true">
+      <span class="journey-reindeer">🦌🦌</span><span class="journey-santa">🛷🎅🏻🎒🧝</span>
+    </div>
+
+    <p class="journey-message">¡Rumbo al Polo Norte! ✨</p>
+  </div>
+
+  <!-- Encabezado -->
+  <header class="hero">
+    <nav class="nav">
+      <a class="brand" href="#inicio">✦ Navidad en Familia</a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#calendario">Calendario</a>
+        <a href="#cartas">Cartas</a>
+        <a href="#santa">Santa</a>
+        <a href="#amigo">Amigo secreto</a>
+        <a href="#recuerdos">Recuerdos</a>
+      </div>
+    </nav>
+
+    <section class="hero-content" id="inicio">
+      <p class="eyebrow">Una familia · Muchos recuerdos · Una Navidad</p>
+
+      <h1>La magia de la Navidad<br><em>está en estar juntos.</em></h1>
+
+      <p class="hero-copy">
+        Ugalde Arguedas · Ugalde Garro · Delgado Ugalde<br>
+        Jiménez Ugalde · Ugalde Escalante · Bolaños Ugalde
+      </p>
+
+      <a class="button button-gold" href="#calendario">
+        Descubrir nuestra Navidad <span>↓</span>
+      </a>
+
+      <div class="hero-tree" aria-hidden="true">🎄</div>
+    </section>
+
+    <div class="hero-bottom">
+      <span>Navidad 2026</span>
+      <span>Hecho con cariño para nuestra familia ♡</span>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Introducción -->
+    <section class="intro section narrow">
+      <span class="section-kicker">Lo que realmente importa</span>
+
+      <h2>El mejor regalo es <em>estar juntos.</em></h2>
+
+      <p>“Amados, si Dios nos ha amado así, debemos también nosotros amarnos unos a otros.”</p>
+
+      <strong class="verse">1 Juan 4:11</strong>
+
+      <p class="muted">
+        No necesitamos grandes regalos para ser felices. El mejor regalo es compartir,
+        escuchar las risas de nuestros niños, abrazarnos y agradecer por tenernos.
+        Que nunca nos falten la salud, la unión, la fe y la oportunidad de reunirnos.
+      </p>
+    </section>
+
+    <!-- Calendario -->
+    <section class="section section-green" id="calendario">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Apartá las fechas</span>
+          <h2>Nuestro calendario <em>navideño</em></h2>
+        </div>
+
+        <button class="button button-outline" id="addEventBtn">＋ Agregar actividad</button>
+      </div>
+
+      <div id="eventsList" class="event-grid"></div>
+
+      <p class="small-note">
+        Las fechas, horas y lugares se pueden editar. Los cambios de esta versión se guardan en este navegador.
+      </p>
+    </section>
+
+    <!-- Mamá y la tamaleada -->
+    <section class="section" id="tamaleada">
+      <div class="mom-card">
+        <div class="mom-icon">❤️</div>
+
+        <div>
+          <span class="section-kicker">Una tradición que sabe esperar</span>
+
+          <h2>Este año, mamá merece <em>descansar.</em></h2>
+
+          <p>
+            Este año queremos que la Navidad también sea un momento de descanso,
+            amor y tranquilidad para mamá. Nuestra tradicional tamaleada puede esperar.
+            Lo más importante es su bienestar, su recuperación y que pueda disfrutar
+            de sus nietos, sin preocupaciones ni trabajo.
+          </p>
+
+          <p>
+            Los tamales pueden esperar; las tradiciones no se pierden por hacer una pausa.
+            El próximo año tendremos nuevas oportunidades para prepararlos juntos y crear más recuerdos.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cartas al Polo Norte -->
+    <section class="section" id="cartas">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Una misión para los ayudantes de Santa</span>
+          <h2>El buzón mágico del <em>Polo Norte</em></h2>
+        </div>
+
+        <span class="badge">✉️ Correo especial</span>
+      </div>
+
+      <div class="letter-layout">
+        <div class="letter-copy">
+          <div class="mailbox">📮</div>
+
+          <h3>¡Santa está esperando sus cartitas!</h3>
+
+          <p>
+            Con ayuda de mamá o papá, cada pequeño puede enviar una foto de su carta.
+            Cuando la suban, aparecerá una animación de viaje rumbo al Polo Norte.
+          </p>
+
+          <p class="muted">
+            El 22 de diciembre podremos actualizar el estado de cada carta para contarles
+            que Santa ya la recibió y está revisando sus deseos.
+          </p>
+        </div>
+
+        <form id="letterForm" class="form-card">
+          <label>
+            Nombre del niño
+            <input name="child" required maxlength="40" placeholder="Nombre">
+          </label>
+
+          <label>
+            Foto de la carta
+            <input name="letter" type="file" accept="image/*" required>
+          </label>
+
+          <button class="button button-dark" type="submit">Enviar al Polo Norte ✨</button>
+
+          <p class="form-message" id="letterMessage" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div id="lettersList" class="letters-list"></div>
+
+      <p class="small-note warning-note">
+        Privacidad: esta versión de prueba guarda las cartas en el navegador utilizado.
+        Antes de publicar fotografías de niños, se debe configurar almacenamiento privado
+        y permisos de acceso para la familia.
+      </p>
+    </section>
+
+    <!-- Visita de Santa -->
+    <section class="section santa-section" id="santa">
+      <div class="santa-art">🎅</div>
+
+      <span class="section-kicker">Atención, pequeños</span>
+
+      <h2>¡Santa viene a casa de <em>la Tita Mayra!</em></h2>
+
+      <p class="santa-message">
+        “¡Ho, ho, ho! Este 25 de diciembre tengo una parada muy especial:
+        ¡voy a visitar la casa de la Tita Mayra! Espero que estén listos para
+        una Navidad llena de sonrisas, abrazos y sorpresas. ¡Nos vemos muy pronto!”
+      </p>
+
+      <div class="santa-details">
+        <div>
+          <small>FECHA</small>
+          <strong>25 de diciembre</strong>
+        </div>
+
+        <div>
+          <small>HORA</small>
+          <strong>Por confirmar</strong>
+        </div>
+
+        <div>
+          <small>LUGAR</small>
+          <strong>Casa de la Tita Mayra</strong>
+        </div>
+      </div>
+
+      <label class="button button-outline upload-label">
+        ＋ Cargar video de Santa
+        <input id="santaVideo" type="file" accept="video/*" hidden>
+      </label>
+
+      <div id="videoPreview" class="video-preview"></div>
+
+      <p class="small-note">
+        El video se previsualiza localmente. Para que toda la familia lo vea,
+        habrá que subirlo a almacenamiento en la nube.
+      </p>
+    </section>
+
+    <!-- Amigo secreto -->
+    <section class="section section-green" id="amigo">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Los grandes también tienen su magia</span>
+          <h2>Amigo secreto <em>de adultos</em></h2>
+        </div>
+
+        <span class="badge badge-gold">🎁 25 de diciembre</span>
+      </div>
+
+      <div class="letter-layout">
+        <div>
+          <h3>¿Querés participar?</h3>
+
+          <p>
+            Los niños no participan en este intercambio: ellos tendrán su momento especial
+            con Santa. Esta actividad es para los adultos que quieran compartir la ilusión
+            de darse un detalle.
+          </p>
+
+          <p class="muted">
+            El sorteo se realizará cuando estén confirmados los participantes.
+            Cada persona recibirá su asignación de manera privada por correo electrónico.
+          </p>
+
+          <p class="secret-note">
+            🎄 Pronto realizaremos el sorteo.
+          </p>
+        </div>
+
+        <form id="adultForm" class="form-card">
+          <label>
+            Nombre y apellido
+            <input name="adult" required maxlength="60" placeholder="Tu nombre">
+          </label>
+
+          <label>
+            Correo electrónico
+            <input name="email" type="email" required maxlength="120" placeholder="correo@ejemplo.com">
+          </label>
+
+          <label>
+            Presupuesto
+            <select name="budget" required>
+              <option value="">Seleccioná un presupuesto</option>
+              <option value="₡2.000">₡2.000</option>
+              <option value="₡4.000">₡4.000</option>
+              <option value="₡5.000">₡5.000</option>
+              <option value="₡10.000">₡10.000</option>
+            </select>
+          </label>
+
+          <button class="button button-dark" type="submit">¡Quiero participar!</button>
+
+          <p class="form-message" id="adultMessage" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div class="secret-privacy">
+        <span>🔒</span>
+        <p>
+          Los datos de participación y las asignaciones deben manejarse de forma privada.
+          El registro y el envío de correos se habilitarán al conectar el sistema de administración.
+        </p>
+      </div>
+    </section>
+
+    <!-- Cierre -->
+    <section class="closing section narrow">
+      <div class="closing-star">✦</div>
+
+      <h2>
+        Que nunca nos falten motivos<br>
+        para <em>volver a reunirnos.</em>
+      </h2>
+
+      <p>Con cariño, para toda la familia Ugalde.</p>
+    </section>
+
+    <!-- Recuerdos: última sección de contenido -->
+    <section class="section section-soft" id="recuerdos">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Pequeños instantes, grandes recuerdos</span>
+          <h2>Nuestros <em>recuerdos</em></h2>
+        </div>
+      </div>
+
+      <div class="drive-card">
+        <div class="drive-icon">📸</div>
+
+        <div class="drive-copy">
+          <h3>Nuestro álbum familiar</h3>
+          <p>
+            Un espacio para compartir fotografías, revivir momentos especiales
+            y guardar juntos los recuerdos de esta Navidad.
+          </p>
+
+          <a
+            class="button button-dark"
+            href="https://drive.google.com/drive/folders/1X7nd78Ab-wnNXIrpPgUwMox6obQ2SJ3w?usp=drive_link"
+            target="_blank"
+            rel="noopener noreferrer">
+            Abrir álbum familiar ↗
+          </a>
+        </div>
+      </div>
+
+      <p class="small-note">
+        El álbum está alojado en Google Drive. Para mantener las fotografías privadas,
+        la carpeta debe tener acceso restringido y los familiares deben estar invitados
+        con sus cuentas de Google.
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    Creado por Nyx_Nin © 2026 <span>♡</span>
+  </footer>
+
+  <!-- Ventana para actividades -->
+  <dialog id="eventDialog">
+    <form id="eventForm" method="dialog" class="dialog-form">
+
+      <div class="dialog-head">
+        <h3 id="dialogTitle">Agregar actividad</h3>
+        <button type="button" class="close-btn" id="closeDialog">×</button>
+      </div>
+
+      <input type="hidden" name="id">
+
+      <label>
+        Nombre de la actividad
+        <input name="title" required placeholder="Ej. Cena familiar">
+      </label>
+
+      <div class="form-row">
+        <label>Fecha<input name="date" type="date" required></label>
+        <label>Hora<input name="time" type="time"></label>
+      </div>
+
+      <label>
+        Ubicación
+        <input name="location" placeholder="Lugar">
+      </label>
+
+      <label>
+        Descripción
+        <textarea name="description" rows="3" placeholder="Detalles de la actividad"></textarea>
+      </label>
+
+      <div class="dialog-actions">
+        <button type="button" class="button button-outline" id="deleteEventBtn">Eliminar</button>
+        <button class="button button-dark" type="submit">Guardar actividad</button>
+      </div>
+
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
