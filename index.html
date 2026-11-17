@@ -110,13 +110,13 @@
           <h2>Nuestro calendario <em>navideño</em></h2>
         </div>
 
-        <button class="button button-outline" id="addEventBtn">＋ Agregar actividad</button>
+        
       </div>
 
       <div id="eventsList" class="event-grid"></div>
 
       <p class="small-note">
-        Las fechas, horas y lugares se pueden editar. Los cambios de esta versión se guardan en este navegador.
+        Las fechas, horas y lugares están sujetos a cambios.
       </p>
     </section>
 
@@ -127,19 +127,22 @@
 
         <div>
           <span class="section-kicker">Una tradición que sabe esperar</span>
-
-          <h2>Este año, mamá merece <em>descansar.</em></h2>
-
+          <h2>Este año, mami merece <em>descansar.</em></h2>
           <p>
             Este año queremos que la Navidad también sea un momento de descanso,
-            amor y tranquilidad para mamá. Nuestra tradicional tamaleada puede esperar.
-            Lo más importante es su bienestar, su recuperación y que pueda disfrutar
-            de sus nietos, sin preocupaciones ni trabajo.
+            amor y tranquilidad para mami.
           </p>
-
           <p>
-            Los tamales pueden esperar; las tradiciones no se pierden por hacer una pausa.
-            El próximo año tendremos nuevas oportunidades para prepararlos juntos y crear más recuerdos.
+            Los tamales pueden esperar, pero las tradiciones no se pierden por hacer una pausa.
+            El próximo año tendremos nuevas oportunidades para prepararlos juntos.
+          </p>
+          <p>
+            Nos queda solo dar gracias a Dios por la mujer valiente que nos ha dado
+            y disfrutarla al máximo.
+          </p>
+          <p>
+            Por eso, este año la tamaleada quedará cancelada.
+            Esperamos contar con su comprensión.
           </p>
         </div>
       </div>
@@ -192,11 +195,7 @@
 
       <div id="lettersList" class="letters-list"></div>
 
-      <p class="small-note warning-note">
-        Privacidad: esta versión de prueba guarda las cartas en el navegador utilizado.
-        Antes de publicar fotografías de niños, se debe configurar almacenamiento privado
-        y permisos de acceso para la familia.
-      </p>
+      
     </section>
 
     <!-- Visita de Santa -->
@@ -221,7 +220,7 @@
 
         <div>
           <small>HORA</small>
-          <strong>Por confirmar</strong>
+          <strong>12:00 m. a 5:00 p. m.</strong>
         </div>
 
         <div>
@@ -230,17 +229,10 @@
         </div>
       </div>
 
-      <label class="button button-outline upload-label">
-        ＋ Cargar video de Santa
-        <input id="santaVideo" type="file" accept="video/*" hidden>
-      </label>
-
-      <div id="videoPreview" class="video-preview"></div>
-
-      <p class="small-note">
-        El video se previsualiza localmente. Para que toda la familia lo vea,
-        habrá que subirlo a almacenamiento en la nube.
-      </p>
+      <div class="santa-loading" role="status">
+        <span class="santa-loading-star">✦</span>
+        <p>Pronto Santa dará su comunicado…</p>
+      </div>
     </section>
 
     <!-- Amigo secreto -->
@@ -297,16 +289,32 @@
           </label>
 
           <button class="button button-dark" type="submit">¡Quiero participar!</button>
+          <button class="button button-outline" type="button" id="declineAdultBtn">
+            Este año no participaré
+          </button>
 
           <p class="form-message" id="adultMessage" aria-live="polite"></p>
         </form>
       </div>
 
+      <div class="adult-lists">
+        <div>
+          <h3>🎁 Participantes</h3>
+          <div id="adultsList" class="participants"></div>
+        </div>
+        <div>
+          <h3>🌟 Este año no participan</h3>
+          <div id="declinedList" class="participants"></div>
+        </div>
+      </div>
+      <p class="small-note">
+        Las listas se guardan únicamente en este navegador y no se sincronizan entre dispositivos.
+      </p>
       <div class="secret-privacy">
         <span>🔒</span>
         <p>
-          Los datos de participación y las asignaciones deben manejarse de forma privada.
-          El registro y el envío de correos se habilitarán al conectar el sistema de administración.
+          Por privacidad, este sitio no comparte automáticamente los registros
+          ni envía asignaciones por correo electrónico.
         </p>
       </div>
     </section>
@@ -338,8 +346,10 @@
         <div class="drive-copy">
           <h3>Nuestro álbum familiar</h3>
           <p>
-            Un espacio para compartir fotografías, revivir momentos especiales
-            y guardar juntos los recuerdos de esta Navidad.
+            Como todos los años, nuestra alegría es crear recuerdos impregnados en fotografías.
+            Por eso, este espacio es para que puedan subir todas sus fotos, sin límite,
+            y compartirlas con la familia, creando una nueva tradición:
+            tener un álbum digital para todos nosotros.
           </p>
 
           <a
@@ -353,9 +363,10 @@
       </div>
 
       <p class="small-note">
-        El álbum está alojado en Google Drive. Para mantener las fotografías privadas,
-        la carpeta debe tener acceso restringido y los familiares deben estar invitados
-        con sus cuentas de Google.
+        El álbum estará alojado en Google Drive y las fotografías se mantendrán privadas
+        mediante acceso restringido. Pronto se les enviará una invitación para que puedan
+        comenzar a crear estos recuerdos y tener acceso al álbum.
+        <br>Nos vemos pronto.
       </p>
     </section>
 
@@ -365,47 +376,11 @@
     Creado por Nyx_Nin © 2026 <span>♡</span>
   </footer>
 
-  <!-- Ventana para actividades -->
-  <dialog id="eventDialog">
-    <form id="eventForm" method="dialog" class="dialog-form">
-
-      <div class="dialog-head">
-        <h3 id="dialogTitle">Agregar actividad</h3>
-        <button type="button" class="close-btn" id="closeDialog">×</button>
-      </div>
-
-      <input type="hidden" name="id">
-
-      <label>
-        Nombre de la actividad
-        <input name="title" required placeholder="Ej. Cena familiar">
-      </label>
-
-      <div class="form-row">
-        <label>Fecha<input name="date" type="date" required></label>
-        <label>Hora<input name="time" type="time"></label>
-      </div>
-
-      <label>
-        Ubicación
-        <input name="location" placeholder="Lugar">
-      </label>
-
-      <label>
-        Descripción
-        <textarea name="description" rows="3" placeholder="Detalles de la actividad"></textarea>
-      </label>
-
-      <div class="dialog-actions">
-        <button type="button" class="button button-outline" id="deleteEventBtn">Eliminar</button>
-        <button class="button button-dark" type="submit">Guardar actividad</button>
-      </div>
-
-    </form>
-  </dialog>
-
   <script src="app.js"></script>
 
 </body>
 </html>
+
+
+
 

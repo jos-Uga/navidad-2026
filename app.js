@@ -80,32 +80,14 @@ function setupBackgroundMusic() {
 // DATOS
 // ============================================
 
-let events = read("ugalde_events", [
-  {
-    id: "tamales",
-    title: "Tamaleada familiar",
-    date: "2026-12-21",
-    time: "10:00",
-    location: "Casa de la familia",
-    description: "Nuestra tradición de preparar tamales juntos."
-  },
-  {
-    id: "navidad",
-    title: "Navidad en familia",
-    date: "2026-12-25",
-    time: "18:00",
-    location: "Casa de la Tita Mayra",
-    description: "Celebración familiar y llegada de Santa Claus."
-  },
-  {
-    id: "ano-nuevo",
-    title: "Año Nuevo",
-    date: "2026-12-31",
-    time: "20:00",
-    location: "Por confirmar",
-    description: "Despedimos el año y recibimos uno nuevo."
-  }
-]);
+let events = [{
+  id: "navidad",
+  title: "Navidad en familia",
+  date: "2026-12-25",
+  time: "12:00",
+  location: "Casa de la Tita Mayra",
+  description: "Celebración familiar y visita de Santa Claus."
+}];
 
 let letters = read("ugalde_letters", []);
 let adults = read("ugalde_adults", []);
@@ -116,119 +98,28 @@ let adults = read("ugalde_adults", []);
 
 function renderEvents() {
   const root = $("#eventsList");
-
   if (!root) return;
 
-  root.innerHTML = events.length
-    ? ""
-    : '<div class="empty-state">Todavía no hay actividades. ¡Agregá la primera!</div>';
-
-  [...events]
-    .sort((a, b) => a.date.localeCompare(b.date))
-    .forEach(e => {
-      const d = new Date(e.date + "T12:00:00");
-
-      const dateLabel = isNaN(d)
-        ? e.date
-        : d.toLocaleDateString("es-CR", {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-          });
-
-      const card = document.createElement("article");
-      card.className = "event-card";
-
-      card.innerHTML = `
-        <div class="event-date">${dateLabel}</div>
-        <h3>${escapeHtml(e.title)}</h3>
-        <div class="event-meta">
-          ◷ ${escapeHtml(e.time || "Hora por confirmar")}<br>
-          ⌖ ${escapeHtml(e.location || "Ubicación por confirmar")}
-        </div>
-        <p>${escapeHtml(e.description || "")}</p>
-        <div class="card-actions">
-          <button class="text-btn" data-edit="${escapeHtml(e.id)}">
-            Editar
-          </button>
-        </div>
-      `;
-
-      root.appendChild(card);
-    });
-
-  root.querySelectorAll("[data-edit]").forEach(button => {
-    button.addEventListener("click", () => {
-      openEvent(button.dataset.edit);
-    });
-  });
-}
-
-const dialog = $("#eventDialog");
-const eventForm = $("#eventForm");
-
-function openEvent(id) {
-  if (!eventForm || !dialog) return;
-
-  eventForm.reset();
-
-  const e = events.find(x => x.id === id);
-
-  $("#dialogTitle").textContent = e
-    ? "Editar actividad"
-    : "Agregar actividad";
-
-  eventForm.elements.id.value = e?.id || "";
-
-  ["title", "date", "time", "location", "description"].forEach(k => {
-    eventForm.elements[k].value = e?.[k] || "";
+  const e = events[0];
+  const d = new Date(e.date + "T12:00:00");
+  const dateLabel = d.toLocaleDateString("es-CR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
   });
 
-  $("#deleteEventBtn").style.visibility =
-    e ? "visible" : "hidden";
-
-  dialog.showModal();
+  root.innerHTML = `
+    <article class="event-card">
+      <div class="event-date">${dateLabel}</div>
+      <h3>${escapeHtml(e.title)}</h3>
+      <div class="event-meta">
+        ◷ 12:00 m.<br>
+        ⌖ Casa de la Tita Mayra
+      </div>
+      <p>${escapeHtml(e.description)}</p>
+    </article>
+  `;
 }
-
-$("#addEventBtn")?.addEventListener("click", () => openEvent());
-
-$("#closeDialog")?.addEventListener("click", () => {
-  dialog?.close();
-});
-
-eventForm?.addEventListener("submit", ev => {
-  ev.preventDefault();
-
-  const data = Object.fromEntries(
-    new FormData(eventForm).entries()
-  );
-
-  const id = data.id || makeId();
-  const item = { ...data, id };
-
-  const i = events.findIndex(x => x.id === id);
-
-  if (i >= 0) {
-    events[i] = item;
-  } else {
-    events.push(item);
-  }
-
-  write("ugalde_events", events);
-  renderEvents();
-  dialog.close();
-});
-
-$("#deleteEventBtn")?.addEventListener("click", () => {
-  const id = eventForm.elements.id.value;
-
-  events = events.filter(e => e.id !== id);
-
-  write("ugalde_events", events);
-  renderEvents();
-  dialog.close();
-});
-
 // ============================================
 // FOTOGRAFÍAS
 // ============================================
@@ -352,114 +243,50 @@ function animateLetter() {
   const journey = $("#letterJourney");
   const envelope = $("#journeyEnvelope");
   const mailbox = $(".mailbox");
+  const message = journey?.querySelector(".journey-message");
 
-  if (!journey || !envelope || !mailbox) {
-    console.warn("No se encontraron los elementos del viaje de la carta.");
-    return;
-  }
+  if (!journey || !envelope || !mailbox) return;
 
-  // Obtener la ubicación del buzón antes de mostrar la escena.
-  const mailboxRect = mailbox.getBoundingClientRect();
-
-  // Mostrar el escenario del viaje.
+  const start = mailbox.getBoundingClientRect();
   journey.classList.add("active");
 
-  // Ubicación del destino dentro del escenario.
+  if (message) message.textContent = "Enviando carta al Polo Norte…";
+
   const destination = journey.querySelector(".journey-destination");
-  const destinationRect = destination
-    ? destination.getBoundingClientRect()
-    : {
-        left: window.innerWidth * 0.75,
-        top: 80,
-        width: 80,
-        height: 80
-      };
+  const end = destination.getBoundingClientRect();
 
-  // Punto de salida: centro del buzón.
-  const startX = mailboxRect.left + mailboxRect.width / 2 - 18;
-  const startY = mailboxRect.top + mailboxRect.height / 2 - 18;
+  const startX = start.left + start.width / 2 - 35;
+  const startY = start.top + start.height / 2 - 25;
+  const endX = end.left + end.width / 2 - 35;
+  const endY = end.top + end.height / 2 - 25;
 
-  // Punto de llegada: zona del Polo Norte.
-  const endX = destinationRect.left + destinationRect.width / 2 - 18;
-  const endY = destinationRect.top + destinationRect.height / 2 - 18;
-
-  // Puntos intermedios para crear una trayectoria curva.
-  const distanceX = endX - startX;
-  const distanceY = endY - startY;
-
-  const points = [
-    { x: startX, y: startY, rotate: 0, scale: 1 },
-    {
-      x: startX + distanceX * 0.22,
-      y: startY + distanceY * 0.22 - 100,
-      rotate: 15,
-      scale: 0.95
-    },
-    {
-      x: startX + distanceX * 0.48,
-      y: startY + distanceY * 0.48 - 160,
-      rotate: -12,
-      scale: 0.85
-    },
-    {
-      x: startX + distanceX * 0.75,
-      y: startY + distanceY * 0.75 - 90,
-      rotate: 18,
-      scale: 0.75
-    },
-    {
-      x: endX,
-      y: endY,
-      rotate: 0,
-      scale: 0.6
-    }
-  ];
-
-  // Colocar la carta en el buzón.
   envelope.style.left = `${startX}px`;
   envelope.style.top = `${startY}px`;
   envelope.style.opacity = "1";
 
-  envelope.style.transform = "translate(0, 0)";
-
-  // Animación con trayectoria continua.
-  const keyframes = points.map((point, index) => ({
-    left: `${point.x}px`,
-    top: `${point.y}px`,
-    transform: `rotate(${point.rotate}deg) scale(${point.scale})`,
-    opacity: index === points.length - 1 ? 0.2 : 1,
-    offset: index / (points.length - 1)
-  }));
-
-  if (typeof envelope.animate !== "function") {
-    journey.classList.remove("active");
-    return;
-  }
-
-  const animation = envelope.animate(keyframes, {
-    duration: 5200,
+  const animation = envelope.animate([
+    { left: `${startX}px`, top: `${startY}px`, transform: "scale(1)", opacity: 1 },
+    { left: `${endX}px`, top: `${endY}px`, transform: "scale(.85)", opacity: 1 }
+  ], {
+    duration: 3800,
     easing: "ease-in-out",
     fill: "forwards"
   });
 
   animation.onfinish = () => {
-    // Pequeña pausa antes de cerrar la escena.
     setTimeout(() => {
       journey.classList.remove("active");
-
       envelope.style.opacity = "0";
       envelope.style.left = "";
       envelope.style.top = "";
       envelope.style.transform = "";
-
-    }, 900);
-  };
-
-  animation.oncancel = () => {
-    journey.classList.remove("active");
+    }, 1200);
   };
 }
 
+// ============================================
+// CARTAS PARA SANTA
+// ============================================
 // ============================================
 // CARTAS PARA SANTA
 // ============================================
@@ -515,189 +342,103 @@ $("#letterForm")?.addEventListener("submit", async ev => {
 
 function renderLetters() {
   const root = $("#lettersList");
-
   if (!root) return;
 
   root.innerHTML = "";
 
-  // El botón administrativo solo aparece en la vista local.
-  const localAdminPreview =
-    location.protocol === "file:" ||
-    location.hostname === "localhost" ||
-    location.hostname === "127.0.0.1";
-
   letters.forEach(l => {
     const card = document.createElement("div");
-
     card.className = "letter-item";
-
     card.innerHTML = `
       <strong>✉️ ${escapeHtml(l.child)}</strong>
       <img src="${l.data}" alt="Carta de ${escapeHtml(l.child)}">
-      <label>
-        Estado
-        <select data-status="${escapeHtml(l.id)}">
-          <option ${l.status === "Carta enviada" ? "selected" : ""}>
-            Carta enviada
-          </option>
-          <option ${l.status === "Carta recibida por Santa" ? "selected" : ""}>
-            Carta recibida por Santa
-          </option>
-          <option ${l.status === "Carta en revisión" ? "selected" : ""}>
-            Carta en revisión
-          </option>
-          <option ${l.status === "Carta validada" ? "selected" : ""}>
-            Carta validada
-          </option>
-        </select>
-      </label>
-      ${
-        localAdminPreview
-          ? `<button type="button" class="button button-outline letter-delete" data-delete-letter="${escapeHtml(l.id)}">🗑️ Eliminar carta</button>`
-          : ""
-      }
+      <p class="small-note">Carta enviada al Polo Norte ✨</p>
     `;
-
     root.appendChild(card);
-  });
-
-  root.querySelectorAll("select").forEach(select => {
-    select.addEventListener("change", () => {
-      const letter = letters.find(
-        x => x.id === select.dataset.status
-      );
-
-      if (!letter) return;
-
-      letter.status = select.value;
-      write("ugalde_letters", letters);
-    });
-  });
-
-  root.querySelectorAll("[data-delete-letter]").forEach(button => {
-    button.addEventListener("click", () => {
-      const id = button.dataset.deleteLetter;
-      const letter = letters.find(x => x.id === id);
-
-      if (!letter) return;
-
-      const confirmed = confirm(
-        `¿Seguro que deseas eliminar la carta de ${letter.child}? Esta acción no se puede deshacer.`
-      );
-
-      if (!confirmed) return;
-
-      letters = letters.filter(x => x.id !== id);
-      write("ugalde_letters", letters);
-      renderLetters();
-    });
   });
 }
 // ============================================
 // AMIGO SECRETO
 // ============================================
 
+let declinedAdults = read("ugalde_declined_adults", []);
+
 $("#adultForm")?.addEventListener("submit", ev => {
   ev.preventDefault();
 
   const form = ev.currentTarget;
   const name = form.elements.adult.value.trim();
+  const budget = form.elements.budget.value.trim();
 
-  if (!name) return;
+  if (!name || !budget) return;
 
   if (adults.some(a => a.name.toLowerCase() === name.toLowerCase())) {
-    $("#adultMessage").textContent =
-      "Ese nombre ya está inscrito.";
+    $("#adultMessage").textContent = "Ese nombre ya está inscrito.";
     return;
   }
 
-  adults.push({
-    id: makeId(),
-    name,
-    budget: form.elements.budget.value.trim()
-  });
+  declinedAdults = declinedAdults.filter(
+    n => n.toLowerCase() !== name.toLowerCase()
+  );
+  write("ugalde_declined_adults", declinedAdults);
 
+  adults.push({ id: makeId(), name, budget });
   write("ugalde_adults", adults);
 
   form.reset();
-
   $("#adultMessage").textContent =
-    "¡Listo! Tu participación quedó anotada en este dispositivo.";
+    "Tu participación quedó anotada en este dispositivo.";
 
   renderAdults();
 });
 
-function renderAdults() {
-  const root = $("#adultsList");
+$("#declineAdultBtn")?.addEventListener("click", () => {
+  const name = $("#adultForm")?.elements.adult.value.trim();
 
-  if (!root) return;
-
-  root.innerHTML = "";
-
-  adults.forEach(a => {
-    const participant = document.createElement("div");
-
-    participant.className = "participant";
-
-    participant.textContent =
-      "🎁 " + a.name + (a.budget ? " · " + a.budget : "");
-
-    root.appendChild(participant);
-  });
-}
-
-$("#drawBtn")?.addEventListener("click", () => {
-  const out = $("#drawResult");
-
-  if (!out) return;
-
-  if (adults.length < 2) {
-    out.textContent =
-      "Se necesitan al menos dos adultos inscritos.";
+  if (!name) {
+    $("#adultMessage").textContent = "Escribí tu nombre para registrar tu decisión.";
     return;
   }
 
-  const shuffled = [...adults];
+  adults = adults.filter(a => a.name.toLowerCase() !== name.toLowerCase());
+  write("ugalde_adults", adults);
 
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-
-    [shuffled[i], shuffled[j]] =
-      [shuffled[j], shuffled[i]];
+  if (!declinedAdults.some(n => n.toLowerCase() === name.toLowerCase())) {
+    declinedAdults.push(name);
   }
 
-  const pairs = shuffled.map((a, i) =>
-    `${a.name} → ${shuffled[(i + 1) % shuffled.length].name}`
-  );
-
-  out.textContent =
-    "Sorteo local de prueba (visible para quien use este dispositivo): " +
-    pairs.join(" · ");
+  write("ugalde_declined_adults", declinedAdults);
+  $("#adultForm").reset();
+  $("#adultMessage").textContent = "Tu decisión quedó anotada en este dispositivo.";
+  renderAdults();
 });
 
-// ============================================
-// VIDEO DE SANTA
-// ============================================
+function renderAdults() {
+  const participants = $("#adultsList");
+  const declined = $("#declinedList");
 
-$("#santaVideo")?.addEventListener("change", () => {
-  const file = $("#santaVideo").files[0];
+  if (participants) {
+    participants.innerHTML = "";
+    adults.forEach(a => {
+      const item = document.createElement("div");
+      item.className = "participant";
+      item.textContent = "🎁 " + a.name + (a.budget ? " · " + a.budget : "");
+      participants.appendChild(item);
+    });
+    if (!adults.length) participants.textContent = "Aún no hay registros en este dispositivo.";
+  }
 
-  if (!file) return;
-
-  const url = URL.createObjectURL(file);
-
-  $("#videoPreview").innerHTML = "";
-
-  const video = document.createElement("video");
-
-  video.src = url;
-  video.controls = true;
-  video.playsInline = true;
-  video.style.maxWidth = "100%";
-
-  $("#videoPreview").appendChild(video);
-});
-
+  if (declined) {
+    declined.innerHTML = "";
+    declinedAdults.forEach(name => {
+      const item = document.createElement("div");
+      item.className = "participant";
+      item.textContent = "🌟 " + name;
+      declined.appendChild(item);
+    });
+    if (!declinedAdults.length) declined.textContent = "Aún no hay registros en este dispositivo.";
+  }
+}
 // ============================================
 // MENÚ DE NAVEGACIÓN
 // ============================================
@@ -722,4 +463,6 @@ renderEvents();
 renderGallery();
 renderLetters();
 renderAdults();
+
+
 
